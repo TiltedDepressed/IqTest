@@ -56,6 +56,7 @@
             </TextView>
 
             <EditText
+                android:id="@+id/loginEt"
                 android:background="@drawable/edit_text_background"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -70,6 +71,7 @@
             </EditText>
 
             <EditText
+                android:id="@+id/passwordEt"
                 android:background="@drawable/edit_text_background"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -78,6 +80,7 @@
                 android:fontFamily="@font/montserrat_semibold"
                 android:drawableStart="@drawable/ic_password"
                 android:padding="10dp"
+                android:inputType="textPassword"
                 >
 
 
@@ -90,6 +93,7 @@
                 android:layout_marginBottom="10dp"
                 >
                 <CheckBox
+                    android:id="@+id/rememberMeCheckBox"
                     android:fontFamily="@font/montserrat_medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -114,6 +118,7 @@
             </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/signInButton"
                 android:text="Sign in"
                 android:textSize="16sp"
                 android:layout_width="match_parent"
