@@ -5,6 +5,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
+import com.example.iqtest.R
 import com.example.iqtest.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -15,14 +18,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.logOut.setOnClickListener {
-            sharePreference = getSharedPreferences("MY_PRE", Context.MODE_PRIVATE)
-            val editor: SharedPreferences.Editor = sharePreference.edit()
-            editor.clear()
-            editor.apply()
-            val intent = Intent(this@MainActivity,AuthActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+       val bottomNavigationView = binding.btmNav
+        val navController = Navigation.findNavController(this, R.id.host_fragment)
+
+        NavigationUI.setupWithNavController(bottomNavigationView,navController)
     }
 }

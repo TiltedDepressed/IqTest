@@ -70,6 +70,8 @@ class AuthActivity : AppCompatActivity() {
 
                     response.body()?.let {  userList ->
 
+                        editor.putString("USER_ID",userList.userId)
+                        editor.apply()
                         if(binding.rememberMeCheckBox.isChecked) {
                             editor.putString("TOKEN", userList.token)
                             editor.apply()
