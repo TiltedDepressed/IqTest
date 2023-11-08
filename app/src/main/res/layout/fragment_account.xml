@@ -20,7 +20,9 @@
 
       <ScrollView
           android:layout_width="match_parent"
-          android:layout_height="match_parent">
+          android:layout_height="match_parent"
+          android:scrollbars="none"
+          >
 
 
 
@@ -96,7 +98,6 @@
              android:layout_height="50dp"
              android:layout_marginBottom="20dp"
              android:fontFamily="@font/montserrat_semibold"
-             android:hint="User name"
              android:padding="10dp"
 
              >
@@ -170,7 +171,6 @@
              android:layout_height="50dp"
              android:layout_marginBottom="20dp"
              android:fontFamily="@font/montserrat_semibold"
-             android:hint="Email"
              android:padding="10dp"
 
              >
