@@ -9,9 +9,17 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface Api {
+
+    //User
     @Headers("Content-Type:application/json")
     @POST("user/login")
     fun signIn(
+        @Body body: JsonObject
+    ): Call<User>
+
+    @Headers("Content-Type:application/json")
+    @POST("user/signup")
+    fun signUp(
         @Body body: JsonObject
     ): Call<User>
 

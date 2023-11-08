@@ -61,7 +61,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginBottom="20dp"
-                android:drawableStart="@drawable/ic_person"
                 android:fontFamily="@font/montserrat_semibold"
                 android:hint="User name"
                 android:padding="10dp"
@@ -78,7 +77,6 @@
                 android:layout_marginBottom="10dp"
                 android:hint="Password"
                 android:fontFamily="@font/montserrat_semibold"
-                android:drawableStart="@drawable/ic_password"
                 android:padding="10dp"
                 android:inputType="textPassword"
                 >
@@ -126,9 +124,9 @@
                 app:cornerRadius="5dp"
                 android:layout_marginBottom="15dp"
                 android:fontFamily="@font/montserrat_medium"
-                android:background="@drawable/button_background"
+                android:background="@drawable/button_behavior_type_two"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@drawable/button_text_behavior_type_two"
                 >
 
             </androidx.appcompat.widget.AppCompatButton>
@@ -145,16 +143,17 @@
             </TextView>
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/registrationButton"
                 android:fontFamily="@font/montserrat_semibold"
                 android:text="Create account"
                 android:textSize="16sp"
                 android:textAllCaps="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cornerRadius="5dp"
-                android:layout_marginBottom="15dp"
-                android:background="@drawable/button_background_type_two"
-                android:textColor="@color/royalBlue"
+                android:background="@drawable/button_behavior"
+                android:textColor="@drawable/button_text_behavior"
+                android:clickable="true"
+                android:focusable="true"
                 >
 
             </androidx.appcompat.widget.AppCompatButton>

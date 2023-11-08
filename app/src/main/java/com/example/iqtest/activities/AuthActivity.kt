@@ -36,6 +36,12 @@ class AuthActivity : AppCompatActivity() {
 
         }
             autoLogIn()
+
+        binding.registrationButton.setOnClickListener {
+            val intent = Intent(this@AuthActivity,RegistrationActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     private fun autoLogIn() {
