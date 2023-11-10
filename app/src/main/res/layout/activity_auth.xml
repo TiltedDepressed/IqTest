@@ -18,7 +18,19 @@
         app:cardElevation="15dp"
         >
 
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/progressBar"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            >
+
+        </ProgressBar>
+
         <LinearLayout
+            android:id="@+id/rootLayout"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -119,6 +131,7 @@
                 android:id="@+id/signInButton"
                 android:text="Sign in"
                 android:textSize="16sp"
+                android:enabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cornerRadius="5dp"

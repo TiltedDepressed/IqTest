@@ -4,9 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.iqtest.R
 import com.example.iqtest.databinding.ActivityAuthBinding
@@ -21,6 +27,9 @@ import retrofit2.Response
 class AuthActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthBinding
     private lateinit var sharePreference: SharedPreferences
+    private var rememberMe: Boolean? = null
+    private var checker : Boolean = false
+    private var secondChecker: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)
@@ -42,11 +51,22 @@ class AuthActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+       val textWatcher = object: SimpleTextWatcher() {
+           override fun afterTextChanged(s: Editable?) {
+               if(binding.loginEt.text.isNotEmpty() && binding.passwordEt.text.isNotEmpty()){
+                   binding.signInButton.isEnabled = true
+               }
+           }
+       }
+
+        binding.loginEt.addTextChangedListener(textWatcher)
+        binding.passwordEt.addTextChangedListener(textWatcher)
+
     }
 
     private fun autoLogIn() {
         sharePreference = getSharedPreferences("MY_PRE", Context.MODE_PRIVATE)
-        if(sharePreference.getString("TOKEN", null) != null){
+        if(sharePreference.getBoolean("REMEMBER_ME", false)){
             val intent = Intent(this@AuthActivity, MainActivity::class.java)
             startActivity(intent)
             Toast.makeText(this, "auto-log-in", Toast.LENGTH_SHORT).show()
@@ -66,22 +86,35 @@ class AuthActivity : AppCompatActivity() {
         api.signIn(data).enqueue(object: Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 Log.d("AuthViewModel",data.toString())
+
                 if(response.isSuccessful){
 
                     response.body()?.let {  userList ->
+                        if (userList.userId!!.isNotEmpty() && userList.token!!.isNotEmpty()){
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                binding.root.visibility = View.GONE
+                                binding.progressBar.visibility = View.VISIBLE
+                            },1)
+                        }
 
                         editor.putString("USER_ID",userList.userId)
+                        editor.putString("TOKEN", userList.token)
                         editor.apply()
                         if(binding.rememberMeCheckBox.isChecked) {
-                            editor.putString("TOKEN", userList.token)
+                             rememberMe = true
+                            editor.putBoolean("REMEMBER_ME", rememberMe!!)
                             editor.apply()
                         }
 
                     }
-
+                    binding.signInButton.isEnabled = false
                     val intent = Intent(this@AuthActivity,MainActivity::class.java)
                     startActivity(intent)
                 }
+                if(!response.isSuccessful){
+                    Toast.makeText(this@AuthActivity, "test", Toast.LENGTH_SHORT).show()
+                }
+
             }
             override fun onFailure(call: Call<User>, t: Throwable) {
                 Log.e("AuthActivity", t.message.toString())
@@ -89,5 +122,27 @@ class AuthActivity : AppCompatActivity() {
 
         })
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+    }
+
+
+
+
+}
+
+private abstract class  SimpleTextWatcher : TextWatcher{
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+
+    override fun afterTextChanged(s: Editable?) = Unit
+
+
 
 }

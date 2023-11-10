@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -49,17 +51,7 @@ class AccountFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        val data = JsonObject()
-        val userId = sharePreference.getString("USER_ID",null).toString()
-        data.addProperty("token", sharePreference.getString("TOKEN",null))
-
-
-
-        accViewModel.getInfoAboutUser(userId,data)
-
         observeUserLiveData()
-
 
         binding.logOut.setOnClickListener {
             val editor: SharedPreferences.Editor = sharePreference.edit()
@@ -69,11 +61,25 @@ class AccountFragment : Fragment() {
             startActivity(intent)
         }
 
-
     }
 
     private fun observeUserLiveData() {
+
+        val data = JsonObject()
+        val userId = sharePreference.getString("USER_ID",null).toString()
+        data.addProperty("token", sharePreference.getString("TOKEN",null))
+
+        accViewModel.getInfoAboutUser(userId,data)
+
         accViewModel.observerUserLiveData().observe(viewLifecycleOwner){user ->
+
+            if (user.login!!.isNotEmpty() && user.email!!.isNotEmpty()){
+                Handler(Looper.getMainLooper()).postDelayed({
+                    binding.scrollView.visibility = View.VISIBLE
+                    binding.progressBar.visibility = View.GONE
+                },1)
+            }
+
             binding.loginEt.hint = user.login
             binding.emailEt.hint = user.email
         }

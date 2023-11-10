@@ -27,7 +27,7 @@ interface Api {
 
     @Headers("Content-Type:application/json")
     @POST("user/{userId}")
-    fun getUserById(
+     fun getUserById(
         @Path("userId") id: String,
         @Body body: JsonObject
     ): Call<User>
