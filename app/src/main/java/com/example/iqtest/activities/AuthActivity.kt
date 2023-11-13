@@ -28,8 +28,7 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthBinding
     private lateinit var sharePreference: SharedPreferences
     private var rememberMe: Boolean? = null
-    private var checker : Boolean = false
-    private var secondChecker: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)
@@ -37,11 +36,40 @@ class AuthActivity : AppCompatActivity() {
 
         binding.signInButton.setOnClickListener {
 
+            if(binding.loginEt.text.isNotEmpty()){
+                binding.loginEt.background = resources.getDrawable(R.drawable.edit_text_background)
+                binding.wrongDataTextView.visibility = View.GONE
+
+            }
+
+            if(binding.passwordEt.text.isNotEmpty()){
+                binding.passwordEt.background = resources.getDrawable(R.drawable.edit_text_background)
+                binding.wrongPasswordTextView.visibility = View.GONE
+
+            }
+
+            if(binding.loginEt.text.isEmpty()){
+                binding.wrongDataTextView.text = "Login cannot be empty"
+                binding.wrongDataTextView.visibility = View.VISIBLE
+                binding.loginEt.background = resources.getDrawable(R.drawable.edit_text_background_red)
+            }
+
+            if (binding.passwordEt.text.isEmpty()){
+                binding.wrongPasswordTextView.text = "Password cannot be empty"
+                binding.wrongPasswordTextView.visibility = View.VISIBLE
+                binding.passwordEt.background = resources.getDrawable(R.drawable.edit_text_background_red)
+            }
+
+
+
+
             val login = binding.loginEt.text.toString()
 
             val password = binding.passwordEt.text.toString()
 
-            signIn(login,password)
+            if(login.isNotEmpty() && password.isNotEmpty()){
+                signIn(login,password)
+            }
 
         }
             autoLogIn()
@@ -50,17 +78,6 @@ class AuthActivity : AppCompatActivity() {
             val intent = Intent(this@AuthActivity,RegistrationActivity::class.java)
             startActivity(intent)
         }
-
-       val textWatcher = object: SimpleTextWatcher() {
-           override fun afterTextChanged(s: Editable?) {
-               if(binding.loginEt.text.isNotEmpty() && binding.passwordEt.text.isNotEmpty()){
-                   binding.signInButton.isEnabled = true
-               }
-           }
-       }
-
-        binding.loginEt.addTextChangedListener(textWatcher)
-        binding.passwordEt.addTextChangedListener(textWatcher)
 
     }
 
@@ -89,13 +106,7 @@ class AuthActivity : AppCompatActivity() {
 
                 if(response.isSuccessful){
 
-                    response.body()?.let {  userList ->
-                        if (userList.userId!!.isNotEmpty() && userList.token!!.isNotEmpty()){
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                binding.root.visibility = View.GONE
-                                binding.progressBar.visibility = View.VISIBLE
-                            },1)
-                        }
+                    response.body()?.let {userList ->
 
                         editor.putString("USER_ID",userList.userId)
                         editor.putString("TOKEN", userList.token)
@@ -112,7 +123,10 @@ class AuthActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 if(!response.isSuccessful){
-                    Toast.makeText(this@AuthActivity, "test", Toast.LENGTH_SHORT).show()
+                    binding.wrongDataTextView.visibility = View.VISIBLE
+                    binding.wrongDataTextView.text = "Wrong login or password try again"
+                    binding.loginEt.background = resources.getDrawable(R.drawable.edit_text_background_red);
+                    binding.passwordEt.background = resources.getDrawable(R.drawable.edit_text_background_red);
                 }
 
             }

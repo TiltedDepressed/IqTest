@@ -7,31 +7,26 @@
     tools:context=".fragments.AccountFragment">
 
 
-   <androidx.cardview.widget.CardView
-       android:id="@+id/cardView"
-       app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintTop_toTopOf="parent"
-       app:layout_constraintBottom_toBottomOf="parent"
-       app:cardCornerRadius="10dp"
-       android:layout_width="370dp"
-       android:layout_height="650dp"
-       app:cardElevation="10dp"
-       >
+
 
       <ProgressBar
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintBottom_toBottomOf="parent"
           android:id="@+id/progressBar"
           android:layout_gravity="center"
           android:layout_width="200dp"
-          android:layout_height="200dp">
+          android:layout_height="200dp"
+          >
 
       </ProgressBar>
 
       <ScrollView
+          android:visibility="gone"
           android:id="@+id/scrollView"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:visibility="gone"
           android:scrollbars="none">
 
          <LinearLayout
@@ -272,13 +267,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/button_behavior"
+                android:background="@drawable/button_behavior_red"
                 android:clickable="true"
                 android:focusable="true"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Log out"
+                android:text="Leave"
                 android:textAllCaps="false"
-                android:textColor="@drawable/button_text_behavior"
+                android:textColor="@drawable/button_text_behavior_red"
+                android:textSize="16sp">
+
+            </androidx.appcompat.widget.AppCompatButton>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/deleteAccountBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/button_behavior_red"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/montserrat_semibold"
+                android:text="Delete account"
+                android:textAllCaps="false"
+                android:textColor="@drawable/button_text_behavior_red"
                 android:textSize="16sp">
 
             </androidx.appcompat.widget.AppCompatButton>
@@ -287,7 +298,7 @@
       </ScrollView>
 
 
-   </androidx.cardview.widget.CardView>
+
 
 
 

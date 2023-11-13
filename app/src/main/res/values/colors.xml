@@ -6,4 +6,11 @@
     <color name="darkTurquoise">#00CED1</color>
     <color name="deepSkyBlue">#00BFFF</color>
     <color name="skyBlue">#87CEEB</color>
+    <color name="blue">#0000FF</color>
+    <color name="fireBrick">#B22222</color>
+    <color name="crimson">#DC143C</color>
+    <color name="salmon">#FA8072</color>
+    <color name="red">#FF0000</color>
+
+
 </resources>

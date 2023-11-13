@@ -4,6 +4,7 @@ import com.example.iqtest.model.User
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -29,6 +30,20 @@ interface Api {
     @POST("user/{userId}")
      fun getUserById(
         @Path("userId") id: String,
+        @Body body: JsonObject
+    ): Call<User>
+
+    @Headers("Content-Type:application/json")
+    @POST("user/delete/{userId}")
+    fun deleteUserById(
+        @Path("userId") id: String,
+        @Body body: JsonObject
+    ): Call<User>
+
+    @Headers("Content-Type:application/json")
+    @POST("user/update/{userId}")
+    fun updateUserById(
+        @Path("userId") id : String,
         @Body body: JsonObject
     ): Call<User>
 

@@ -1,6 +1,7 @@
 package com.example.iqtest.viewModel
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,6 +34,8 @@ class AccountViewModel: ViewModel() {
         })
 
     }
+
+
 
     fun observerUserLiveData(): LiveData<User> {
         return userLiveData

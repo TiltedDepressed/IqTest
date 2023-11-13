@@ -1,9 +1,11 @@
 package com.example.iqtest.activities
 
 import android.content.Intent
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.example.iqtest.R
 import com.example.iqtest.databinding.ActivityRegistrationBinding
@@ -29,13 +31,39 @@ class RegistrationActivity : AppCompatActivity() {
 
         binding.registrationButton.setOnClickListener {
 
+            if(binding.loginEt.text.isEmpty()){
+                binding.wrongLoginTextView.visibility = View.VISIBLE
+                binding.loginEt.background = resources.getDrawable(R.drawable.edit_text_background_red)
+            } else{
+                binding.wrongLoginTextView.visibility = View.GONE
+                binding.loginEt.background = resources.getDrawable(R.drawable.edit_text_background)
+            }
+            if(binding.emailEt.text.isEmpty()){
+                binding.wrongEmailTextView.visibility = View.VISIBLE
+                binding.emailEt.background = resources.getDrawable(R.drawable.edit_text_background_red)
+            }else{
+                binding.wrongEmailTextView.visibility = View.GONE
+                binding.emailEt.background = resources.getDrawable(R.drawable.edit_text_background)
+            }
+            if(binding.passwordEt.text.isEmpty()){
+                binding.wrongPasswordTextView.visibility = View.VISIBLE
+                binding.passwordEt.background = resources.getDrawable(R.drawable.edit_text_background_red)
+            }else{
+                binding.wrongPasswordTextView.visibility = View.GONE
+                binding.passwordEt.background = resources.getDrawable(R.drawable.edit_text_background)
+            }
+
             val login = binding.loginEt.text.toString()
 
             val email = binding.emailEt.text.toString()
 
             val password = binding.passwordEt.text.toString()
 
-            registration(login,email,password)
+            if(login.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()){
+                registration(login,email,password)
+            }
+
+            return@setOnClickListener
         }
 
     }
@@ -55,8 +83,17 @@ class RegistrationActivity : AppCompatActivity() {
                     if(response.isSuccessful){
                         val intent = Intent(this@RegistrationActivity,AuthActivity::class.java)
                         startActivity(intent)
-                    } else{
-                        Toast.makeText(this@RegistrationActivity, "Error", Toast.LENGTH_SHORT).show()
+                    }
+                    if(response.code() == 409){
+                        binding.userAlreadyExistTextView.visibility = View.VISIBLE
+                        binding.loginEt.background = resources.getDrawable(R.drawable.edit_text_background_red)
+                        binding.emailEt.background = resources.getDrawable(R.drawable.edit_text_background_red)
+                        binding.passwordEt.background = resources.getDrawable(R.drawable.edit_text_background_red)
+                    }else{
+                        binding.userAlreadyExistTextView.visibility = View.GONE
+                        binding.loginEt.background = resources.getDrawable(R.drawable.edit_text_background)
+                        binding.emailEt.background = resources.getDrawable(R.drawable.edit_text_background)
+                        binding.passwordEt.background = resources.getDrawable(R.drawable.edit_text_background)
                     }
                 }
 
@@ -66,7 +103,8 @@ class RegistrationActivity : AppCompatActivity() {
 
             })
         } else{
-            Toast.makeText(this, "You should be agree with terms and conditions", Toast.LENGTH_SHORT).show()
+            binding.checkboxLayout.background = resources.getDrawable(R.drawable.edit_text_background_red)
+            binding.checkBoxDoesNotCheckedTextView.visibility = View.VISIBLE
         }
 
   
