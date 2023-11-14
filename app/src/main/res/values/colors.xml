@@ -11,6 +11,8 @@
     <color name="crimson">#DC143C</color>
     <color name="salmon">#FA8072</color>
     <color name="red">#FF0000</color>
+    <color name="darkOrchid">#9932CC</color>
+    <color name="mediumPurple">#9370DB</color>
 
 
 </resources>

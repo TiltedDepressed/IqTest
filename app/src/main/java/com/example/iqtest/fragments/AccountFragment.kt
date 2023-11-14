@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.iqtest.activities.AuthActivity
+import com.example.iqtest.activities.TestActivity
 import com.example.iqtest.databinding.FragmentAccountBinding
 import com.example.iqtest.datasource.ServiceBuilder
 import com.example.iqtest.interfaces.Api
@@ -115,7 +116,20 @@ class AccountFragment : Fragment() {
             }
         }
 
+        adminButtonView()
 
+
+    }
+
+    private fun adminButtonView() {
+      val userRole = sharePreference.getString("ROLE",null)
+        if(userRole == "2"){
+            binding.adminButton.visibility = View.VISIBLE
+        }
+        binding.adminButton.setOnClickListener {
+            val intent = Intent(this.requireActivity(),TestActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun changeUserData(userId: String,data: JsonObject) {

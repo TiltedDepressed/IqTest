@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.iqtest.activities.AboutActivity
+import com.example.iqtest.activities.TestActivity
 import com.example.iqtest.databinding.FragmentHomeBinding
 import com.example.iqtest.viewModel.AccountViewModel
 import com.google.gson.JsonObject
@@ -47,6 +48,11 @@ class HomeFragment : Fragment() {
 
         binding.aboutButton.setOnClickListener {
             val intent = Intent(this.requireActivity(), AboutActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.startTestButton.setOnClickListener {
+            val intent = Intent(this.requireActivity(), TestActivity::class.java)
             startActivity(intent)
         }
 

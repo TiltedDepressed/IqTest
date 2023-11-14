@@ -109,6 +109,7 @@ class AuthActivity : AppCompatActivity() {
 
                         editor.putString("USER_ID",userList.userId)
                         editor.putString("TOKEN", userList.token)
+                        editor.putString("ROLE",userList.role)
                         editor.apply()
                         if(binding.rememberMeCheckBox.isChecked) {
                              rememberMe = true
