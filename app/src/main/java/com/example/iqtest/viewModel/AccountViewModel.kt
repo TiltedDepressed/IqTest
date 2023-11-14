@@ -15,6 +15,8 @@ import retrofit2.Response
 
 class AccountViewModel: ViewModel() {
     private var userLiveData = MutableLiveData<User>()
+
+
     fun getInfoAboutUser(userId: String, data: JsonObject) {
         val api = ServiceBuilder.buildService(Api::class.java)
         api.getUserById(userId, data).enqueue(object : Callback<User> {

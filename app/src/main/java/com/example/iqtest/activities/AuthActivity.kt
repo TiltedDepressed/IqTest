@@ -86,7 +86,6 @@ class AuthActivity : AppCompatActivity() {
         if(sharePreference.getBoolean("REMEMBER_ME", false)){
             val intent = Intent(this@AuthActivity, MainActivity::class.java)
             startActivity(intent)
-            Toast.makeText(this, "auto-log-in", Toast.LENGTH_SHORT).show()
         }
     }
 
