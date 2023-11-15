@@ -47,4 +47,11 @@ interface Api {
         @Body body: JsonObject
     ): Call<User>
 
+    @Headers("Content-Type:application/json")
+    @POST("user/role/{role}")
+    fun getAllUsersByRole(
+        @Path("role") id : String,
+        @Body body: JsonObject
+    ): Call<User>
+
 }
