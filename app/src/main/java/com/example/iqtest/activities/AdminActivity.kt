@@ -20,6 +20,7 @@ import com.example.iqtest.databinding.ActivityAdminBinding
 import com.example.iqtest.databinding.AdminDeleteRecyclerItemBinding
 import com.example.iqtest.databinding.ChangeAdminPageBinding
 import com.example.iqtest.databinding.CreateAdminPageBinding
+import com.example.iqtest.databinding.CreateQuestionPageBinding
 import com.example.iqtest.databinding.DeleteAdminPageBinding
 import com.example.iqtest.databinding.EditAdminPageBinding
 import com.example.iqtest.datasource.ServiceBuilder
@@ -46,6 +47,7 @@ class AdminActivity : AppCompatActivity() {
     private lateinit var adminDeleteAdapter: AdminDeleteAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityAdminBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -65,8 +67,27 @@ class AdminActivity : AppCompatActivity() {
             deleteAdminShow()
         }
 
+        binding.createNewQuestionButton.setOnClickListener {
+            blurBackGround(true)
+            createQuestionShow()
+        }
 
 
+
+    }
+
+    private fun createQuestionShow() {
+        val createQuestionPageBinding = CreateQuestionPageBinding.inflate(layoutInflater)
+        val dialog = Dialog(this)
+        dialog.setContentView(createQuestionPageBinding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+        createQuestionPageBinding.cancelButton.setOnClickListener {
+            blurBackGround(false)
+            dialog.dismiss()
+        }
     }
 
     private fun deleteAdminShow() {
@@ -216,7 +237,6 @@ class AdminActivity : AppCompatActivity() {
             }
         }
     }
-
 
     private fun prepareAdminRecyclerView(binding:ChangeAdminPageBinding) {
         adminAdapter = AdminAdapter()
