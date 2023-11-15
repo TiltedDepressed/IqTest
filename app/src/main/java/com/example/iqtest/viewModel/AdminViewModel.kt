@@ -15,7 +15,9 @@ import retrofit2.Response
 
 class AdminViewModel: ViewModel() {
 
-    private var userLiveData = MutableLiveData<List<User>>()
+    private var userListLiveData = MutableLiveData<List<User>>()
+
+    private var userLiveData = MutableLiveData<User>()
     fun getUsersByRole(role: String,data:JsonObject){
         val api = ServiceBuilder.buildService(Api::class.java)
         api.getAllUsersByRole(role,data).enqueue(object: Callback<ApiResponse<User>>{
@@ -23,7 +25,7 @@ class AdminViewModel: ViewModel() {
                 if (response.isSuccessful) {
                     response.body()?.let { userList ->
                         Log.d("zxc",userList.toString())
-                        userLiveData.postValue(userList.result)
+                        userListLiveData.postValue(userList.result)
                     }
                 }
             }
@@ -35,8 +37,65 @@ class AdminViewModel: ViewModel() {
         })
     }
 
-    fun observerUserLiveData(): LiveData<List<User>> {
+    fun deleteUserById(userId: String, data: JsonObject) {
+        val api = ServiceBuilder.buildService(Api::class.java)
+        api.deleteUserById(userId, data).enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                Log.e("AccountFragment", t.message.toString())
+            }
+        })
+    }
+
+    fun getInfoAboutUser(userId: String, data: JsonObject) {
+        val api = ServiceBuilder.buildService(Api::class.java)
+        api.getUserById(userId, data).enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                if (response.isSuccessful) {
+                    response.body()?.let { user ->
+                        userLiveData.postValue(user)
+                    }
+                }
+
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                Log.e("AccountViewModel", t.message.toString())
+            }
+
+        })
+
+    }
+
+    fun changeUserData(userId: String, data: JsonObject) {
+        val api = ServiceBuilder.buildService(Api::class.java)
+        api.updateUserById(userId, data).enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                if (response.isSuccessful) {
+                    observeUserLiveData()
+                }
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                Log.e("AccountFragment", t.message.toString())
+            }
+
+        })
+    }
+
+
+
+    fun observeUserLiveData(): LiveData<User>{
         return userLiveData
+    }
+
+
+
+    fun observerUserListLiveData(): LiveData<List<User>> {
+        return userListLiveData
     }
 
 

@@ -77,7 +77,7 @@
                 </androidx.appcompat.widget.AppCompatButton>
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/deleteUserBtn"
+                    android:id="@+id/deleteAdminButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"

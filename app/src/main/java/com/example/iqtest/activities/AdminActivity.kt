@@ -15,9 +15,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.iqtest.R
 import com.example.iqtest.adapters.AdminAdapter
+import com.example.iqtest.adapters.AdminDeleteAdapter
 import com.example.iqtest.databinding.ActivityAdminBinding
+import com.example.iqtest.databinding.AdminDeleteRecyclerItemBinding
 import com.example.iqtest.databinding.ChangeAdminPageBinding
 import com.example.iqtest.databinding.CreateAdminPageBinding
+import com.example.iqtest.databinding.DeleteAdminPageBinding
+import com.example.iqtest.databinding.EditAdminPageBinding
 import com.example.iqtest.datasource.ServiceBuilder
 import com.example.iqtest.interfaces.Api
 import com.example.iqtest.model.User
@@ -27,6 +31,7 @@ import jp.wasabeef.blurry.Blurry
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.math.log
 
 class AdminActivity : AppCompatActivity() {
 
@@ -37,6 +42,8 @@ class AdminActivity : AppCompatActivity() {
     private lateinit var adminViewModel: AdminViewModel
 
     private lateinit var adminAdapter: AdminAdapter
+
+    private lateinit var adminDeleteAdapter: AdminDeleteAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdminBinding.inflate(layoutInflater)
@@ -51,6 +58,78 @@ class AdminActivity : AppCompatActivity() {
         binding.changeAdminDataButton.setOnClickListener {
             blurBackGround(true)
             changeAdminShow()
+        }
+
+        binding.deleteAdminButton.setOnClickListener {
+            blurBackGround(true)
+            deleteAdminShow()
+        }
+
+
+
+    }
+
+    private fun deleteAdminShow() {
+        val data = JsonObject()
+        val token = sharePreference.getString("TOKEN",null).toString()
+        data.addProperty("token",token)
+
+        val deleteAdminBinding = DeleteAdminPageBinding.inflate(layoutInflater)
+        val dialog = Dialog(this)
+
+        dialog.setContentView(deleteAdminBinding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+
+        prepareAdminDeleteRecyclerView(deleteAdminBinding)
+
+        adminViewModel = ViewModelProvider(this)[AdminViewModel::class.java]
+
+        adminViewModel.getUsersByRole("2", data)
+
+        observerUserDeleteLiveData()
+
+        onAdminDeleteButtonClick()
+
+        deleteAdminBinding.cancelButton.setOnClickListener {
+            blurBackGround(false)
+            dialog.dismiss()
+        }
+
+    }
+
+    private fun observerUserInfoLiveData(editAdminPageBinding: EditAdminPageBinding) {
+        adminViewModel.observeUserLiveData().observe(this,){user->
+              editAdminPageBinding.loginEt.hint = user.login
+              editAdminPageBinding.passwordEt.hint = "Password"
+              editAdminPageBinding.emailEt.hint = user.email
+        }
+    }
+
+    private fun onAdminDeleteButtonClick() {
+        val data = JsonObject()
+        val token = sharePreference.getString("TOKEN",null).toString()
+        data.addProperty("token",token)
+        adminDeleteAdapter.onItemClick = {user->
+            adminViewModel.deleteUserById(user.userId!!,data)
+            adminViewModel.getUsersByRole("2", data)
+        }
+
+    }
+
+    private fun observerUserDeleteLiveData() {
+        adminViewModel.observerUserListLiveData().observe(this, Observer {userList ->
+            adminDeleteAdapter.setUserList(userList)
+            Log.d("zxc",userList.toString())
+        })
+    }
+
+    private fun prepareAdminDeleteRecyclerView(binding: DeleteAdminPageBinding) {
+        adminDeleteAdapter = AdminDeleteAdapter()
+        binding.adminListRecyclerView.apply {
+            adapter = adminDeleteAdapter
         }
     }
 
@@ -77,6 +156,8 @@ class AdminActivity : AppCompatActivity() {
 
         observerUserLiveData()
 
+        onAdminEditButtonClick(changeAdminBinding,dialog)
+
         changeAdminBinding.cancelButton.setOnClickListener {
             blurBackGround(false)
             dialog.dismiss()
@@ -84,6 +165,56 @@ class AdminActivity : AppCompatActivity() {
 
 
 
+    }
+
+    private fun onAdminEditButtonClick(changeAdminBinding: ChangeAdminPageBinding ,dialog: Dialog) {
+        val data = JsonObject()
+        val token = sharePreference.getString("TOKEN",null).toString()
+        data.addProperty("token",token)
+        adminAdapter.onItemClick = {user->
+
+            adminViewModel.getInfoAboutUser(user.userId!!,data)
+            val editAdminPageBinding = EditAdminPageBinding.inflate(layoutInflater)
+            dialog.setContentView(editAdminPageBinding.root)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+
+            observerUserInfoLiveData(editAdminPageBinding)
+
+            editAdminPageBinding.changeAdminButton.setOnClickListener {
+
+                val login = editAdminPageBinding.loginEt.text.toString()
+
+                val password = editAdminPageBinding.passwordEt.text.toString()
+
+                val email = editAdminPageBinding.emailEt.text.toString()
+
+                if(editAdminPageBinding.loginEt.text.isNotEmpty()){
+                    data.addProperty("login",login)
+                    adminViewModel.changeUserData(user.userId!!,data)
+                    editAdminPageBinding.loginEt.text.clear()
+                    adminViewModel.getInfoAboutUser(user.userId!!,data)
+                }
+                if(editAdminPageBinding.passwordEt.text.isNotEmpty()){
+                    data.addProperty("password",password)
+                    adminViewModel.changeUserData(user.userId!!,data)
+                    editAdminPageBinding.passwordEt.text.clear()
+                    adminViewModel.getInfoAboutUser(user.userId!!,data)
+                }
+                if(editAdminPageBinding.emailEt.text.isNotEmpty()){
+                    data.addProperty("email",email)
+                    adminViewModel.changeUserData(user.userId!!,data)
+                    editAdminPageBinding.emailEt.text.clear()
+                    adminViewModel.getInfoAboutUser(user.userId!!,data)
+                }
+
+
+            }
+
+            editAdminPageBinding.cancelButton.setOnClickListener {
+                dialog.setContentView(changeAdminBinding.root)
+            }
+        }
     }
 
 
@@ -95,7 +226,7 @@ class AdminActivity : AppCompatActivity() {
     }
 
     private fun observerUserLiveData() {
-        adminViewModel.observerUserLiveData().observe(this, Observer {userList ->
+        adminViewModel.observerUserListLiveData().observe(this, Observer {userList ->
             adminAdapter.setUserList(userList)
             Log.d("zxc",userList.toString())
         })

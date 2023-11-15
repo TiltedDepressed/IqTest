@@ -30,17 +30,17 @@
 
         <androidx.appcompat.widget.AppCompatButton
 
-            android:id="@+id/editButton"
+            android:id="@+id/deleteButton"
             android:layout_marginEnd="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_behavior_purple"
+            android:background="@drawable/button_behavior_red"
             android:clickable="true"
             android:focusable="true"
             android:fontFamily="@font/montserrat_semibold"
-            android:text="Edit"
+            android:text="Delete"
             android:textAllCaps="false"
-            android:textColor="@drawable/button_text_behavior_purple"
+            android:textColor="@drawable/button_text_behavior_red"
             android:textSize="16sp">
         </androidx.appcompat.widget.AppCompatButton>
 
