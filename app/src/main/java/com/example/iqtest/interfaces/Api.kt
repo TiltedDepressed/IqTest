@@ -1,15 +1,13 @@
 package com.example.iqtest.interfaces
 
+import com.example.iqtest.model.ApiResponse
 import com.example.iqtest.model.User
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface Api {
 
@@ -52,6 +50,6 @@ interface Api {
     fun getAllUsersByRole(
         @Path("role") id : String,
         @Body body: JsonObject
-    ): Call<User>
+    ): Call<ApiResponse<User>>
 
 }

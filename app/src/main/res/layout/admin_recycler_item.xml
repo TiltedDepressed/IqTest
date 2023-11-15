@@ -6,12 +6,10 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:padding="13dp"
         android:background="@drawable/card_view_background"
         android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
@@ -31,6 +29,7 @@
         </TextView>
 
         <androidx.appcompat.widget.AppCompatButton
+
             android:id="@+id/editButton"
             android:layout_marginEnd="15dp"
             android:layout_width="wrap_content"
@@ -43,22 +42,6 @@
             android:textAllCaps="false"
             android:textColor="@drawable/button_text_behavior_purple"
             android:textSize="16sp">
-        </androidx.appcompat.widget.AppCompatButton>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/deleteButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_behavior_red"
-            android:clickable="true"
-            android:focusable="true"
-            android:fontFamily="@font/montserrat_semibold"
-            android:text="Delete"
-            android:textAllCaps="false"
-            android:textColor="@drawable/button_text_behavior_red"
-            android:textSize="16sp"
-            android:layout_marginEnd="10dp"
-            >
         </androidx.appcompat.widget.AppCompatButton>
 
     </LinearLayout>

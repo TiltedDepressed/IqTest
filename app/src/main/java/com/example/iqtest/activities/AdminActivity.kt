@@ -11,13 +11,17 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.iqtest.R
+import com.example.iqtest.adapters.AdminAdapter
 import com.example.iqtest.databinding.ActivityAdminBinding
 import com.example.iqtest.databinding.ChangeAdminPageBinding
 import com.example.iqtest.databinding.CreateAdminPageBinding
 import com.example.iqtest.datasource.ServiceBuilder
 import com.example.iqtest.interfaces.Api
 import com.example.iqtest.model.User
+import com.example.iqtest.viewModel.AdminViewModel
 import com.google.gson.JsonObject
 import jp.wasabeef.blurry.Blurry
 import retrofit2.Call
@@ -29,6 +33,10 @@ class AdminActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAdminBinding
 
     private lateinit var sharePreference: SharedPreferences
+
+    private lateinit var adminViewModel: AdminViewModel
+
+    private lateinit var adminAdapter: AdminAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAdminBinding.inflate(layoutInflater)
@@ -47,13 +55,28 @@ class AdminActivity : AppCompatActivity() {
     }
 
     private fun changeAdminShow() {
+
+        val data = JsonObject()
+        val token = sharePreference.getString("TOKEN",null).toString()
+        data.addProperty("token",token)
+
         val changeAdminBinding = ChangeAdminPageBinding.inflate(layoutInflater)
         val dialog = Dialog(this)
+
         dialog.setContentView(changeAdminBinding.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
         dialog.setCancelable(false)
         dialog.setCanceledOnTouchOutside(false)
+
+        prepareAdminRecyclerView(changeAdminBinding)
+
+        adminViewModel = ViewModelProvider(this)[AdminViewModel::class.java]
+
+        adminViewModel.getUsersByRole("2", data)
+
+        observerUserLiveData()
+
         changeAdminBinding.cancelButton.setOnClickListener {
             blurBackGround(false)
             dialog.dismiss()
@@ -62,6 +85,22 @@ class AdminActivity : AppCompatActivity() {
 
 
     }
+
+
+    private fun prepareAdminRecyclerView(binding:ChangeAdminPageBinding) {
+        adminAdapter = AdminAdapter()
+        binding.adminListRecyclerView.apply {
+            adapter = adminAdapter
+        }
+    }
+
+    private fun observerUserLiveData() {
+        adminViewModel.observerUserLiveData().observe(this, Observer {userList ->
+            adminAdapter.setUserList(userList)
+            Log.d("zxc",userList.toString())
+        })
+    }
+
     private fun createAdminShow() {
         val createAdminBinding = CreateAdminPageBinding.inflate(layoutInflater)
         val dialog = Dialog(this)
