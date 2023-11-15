@@ -36,7 +36,7 @@
 
             <TextView
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Create question"
+                android:text="Change question"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:gravity="center"
@@ -77,9 +77,9 @@
             </EditText>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/createQuestionButton"
+                android:id="@+id/changeQuestionButton"
                 android:fontFamily="@font/montserrat_semibold"
-                android:text="Create"
+                android:text="Change"
                 android:textSize="16sp"
                 android:textAllCaps="false"
                 android:layout_width="match_parent"

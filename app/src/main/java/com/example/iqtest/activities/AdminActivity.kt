@@ -16,13 +16,18 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.iqtest.R
 import com.example.iqtest.adapters.AdminAdapter
 import com.example.iqtest.adapters.AdminDeleteAdapter
+import com.example.iqtest.adapters.QuestionAdapter
+import com.example.iqtest.adapters.QuestionDeleteAdapter
 import com.example.iqtest.databinding.ActivityAdminBinding
 import com.example.iqtest.databinding.AdminDeleteRecyclerItemBinding
 import com.example.iqtest.databinding.ChangeAdminPageBinding
+import com.example.iqtest.databinding.ChangeQuestionPageBinding
 import com.example.iqtest.databinding.CreateAdminPageBinding
 import com.example.iqtest.databinding.CreateQuestionPageBinding
 import com.example.iqtest.databinding.DeleteAdminPageBinding
+import com.example.iqtest.databinding.DeleteQuestionPageBinding
 import com.example.iqtest.databinding.EditAdminPageBinding
+import com.example.iqtest.databinding.EditQuestionPageBinding
 import com.example.iqtest.datasource.ServiceBuilder
 import com.example.iqtest.interfaces.Api
 import com.example.iqtest.model.User
@@ -44,6 +49,10 @@ class AdminActivity : AppCompatActivity() {
 
     private lateinit var adminAdapter: AdminAdapter
 
+    private lateinit var questionAdapter: QuestionAdapter
+
+    private lateinit var questionDeleteAdapter: QuestionDeleteAdapter
+
     private lateinit var adminDeleteAdapter: AdminDeleteAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +60,13 @@ class AdminActivity : AppCompatActivity() {
         binding = ActivityAdminBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        adminViewModel = ViewModelProvider(this)[AdminViewModel::class.java]
+
         sharePreference = getSharedPreferences("MY_PRE", Context.MODE_PRIVATE)
+
+        questionAdapter = QuestionAdapter()
+
+        questionDeleteAdapter = QuestionDeleteAdapter()
 
         binding.createNewAdminButton.setOnClickListener {
             blurBackGround(true)
@@ -72,8 +87,150 @@ class AdminActivity : AppCompatActivity() {
             createQuestionShow()
         }
 
+        binding.changeQuestionButton.setOnClickListener {
+            blurBackGround(true)
+            changeQuestionShow()
+        }
+
+        binding.deleteQuestionBtn.setOnClickListener {
+            blurBackGround(true)
+            deleteQuestionShow()
+        }
+
+    }
+
+    private fun deleteQuestionShow() {
+        val deleteQuestionPageBinding = DeleteQuestionPageBinding.inflate(layoutInflater)
+        val dialog = Dialog(this)
+        dialog.setContentView(deleteQuestionPageBinding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+
+        val data = JsonObject()
+
+        data.addProperty("token",sharePreference.getString("TOKEN",null))
+
+        prepareQuestionDeleteRecyclerView(deleteQuestionPageBinding)
+
+        adminViewModel.getAllQuestions(data)
+
+        observerQuestionDeleteListLiveData()
+
+        onQuestionDeleteButtonClick()
+
+        deleteQuestionPageBinding.cancelButton.setOnClickListener {
+            blurBackGround(false)
+            dialog.dismiss()
+        }
+    }
+
+    private fun onQuestionDeleteButtonClick() {
+        val data = JsonObject()
+        val token = sharePreference.getString("TOKEN",null).toString()
+        data.addProperty("token",token)
+
+        questionDeleteAdapter.onItemClick= {question->
+            adminViewModel.deleteQuestionById(question.questionId.toString(),data)
+            adminViewModel.getAllQuestions(data)
+        }
+    }
+
+    private fun observerQuestionDeleteListLiveData() {
+        adminViewModel.observerQuestionListLiveData().observe(this, Observer {questionList ->
+            questionDeleteAdapter.setQuestionList(questionList)
+        })
+    }
+
+    private fun prepareQuestionDeleteRecyclerView(deleteQuestionPageBinding: DeleteQuestionPageBinding) {
+        deleteQuestionPageBinding.questionListRecyclerView.apply {
+            adapter = questionDeleteAdapter
+        }
+    }
+
+    private fun changeQuestionShow() {
+        val changeQuestionPageBinding = ChangeQuestionPageBinding.inflate(layoutInflater)
+        val dialog = Dialog(this)
+        dialog.setContentView(changeQuestionPageBinding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+
+        val data = JsonObject()
+
+        data.addProperty("token",sharePreference.getString("TOKEN",null))
+
+        prepareQuestionRecyclerView(changeQuestionPageBinding)
+
+        adminViewModel.getAllQuestions(data)
+
+        observerQuestionListLiveData()
 
 
+        onQuestionEditButtonClick(changeQuestionPageBinding,dialog)
+
+        changeQuestionPageBinding.cancelButton.setOnClickListener {
+            blurBackGround(false)
+            dialog.dismiss()
+        }
+    }
+
+    private fun observerQuestionListLiveData() {
+        adminViewModel.observerQuestionListLiveData().observe(this, Observer {questionList ->
+            questionAdapter.setQuestionList(questionList)
+        })
+    }
+
+    private fun prepareQuestionRecyclerView(binding: ChangeQuestionPageBinding) {
+        binding.questionListRecyclerView.apply {
+            adapter = questionAdapter
+        }
+    }
+
+    private fun onQuestionEditButtonClick(changeQuestionPageBinding: ChangeQuestionPageBinding, dialog: Dialog) {
+        val data = JsonObject()
+        val token = sharePreference.getString("TOKEN",null).toString()
+
+        data.addProperty("token",token)
+
+        questionAdapter.onItemClick = {question ->
+
+            adminViewModel.getQuestionById(question.questionId.toString(),data)
+
+            val editQuestionPageBinding = EditQuestionPageBinding.inflate(layoutInflater)
+
+            dialog.setContentView(editQuestionPageBinding.root)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+            dialog.setCancelable(false)
+            dialog.setCanceledOnTouchOutside(false)
+
+            observerQuestionLiveData(editQuestionPageBinding)
+
+            editQuestionPageBinding.changeQuestionButton.setOnClickListener {
+
+               if(editQuestionPageBinding.questionEt.text.isNotEmpty()){
+                   data.addProperty("question",editQuestionPageBinding.questionEt.text.toString())
+                   adminViewModel.updateQuestionById(question.questionId.toString(),data)
+                   editQuestionPageBinding.questionEt.text.clear()
+                   adminViewModel.getQuestionById(question.questionId.toString(),data)
+               }
+            }
+
+            editQuestionPageBinding.cancelButton.setOnClickListener {
+                dialog.setContentView(changeQuestionPageBinding.root)
+                adminViewModel.getAllQuestions(data)
+            }
+
+        }
+    }
+
+    private fun observerQuestionLiveData(editQuestionPageBinding: EditQuestionPageBinding) {
+        adminViewModel.observeQuestionLiveData().observe(this, Observer {question ->
+            editQuestionPageBinding.questionEt.hint = question.question
+        })
     }
 
     private fun createQuestionShow() {
@@ -84,6 +241,17 @@ class AdminActivity : AppCompatActivity() {
         dialog.show()
         dialog.setCancelable(false)
         dialog.setCanceledOnTouchOutside(false)
+
+        createQuestionPageBinding.createQuestionButton.setOnClickListener {
+            val data = JsonObject()
+            val token = sharePreference.getString("TOKEN",null).toString()
+            val questionText = createQuestionPageBinding.questionEt.text.toString()
+            data.addProperty("token",token)
+            data.addProperty("question",questionText)
+            adminViewModel.createQuestion(data)
+            blurBackGround(false)
+            dialog.dismiss()
+        }
         createQuestionPageBinding.cancelButton.setOnClickListener {
             blurBackGround(false)
             dialog.dismiss()
@@ -234,6 +402,7 @@ class AdminActivity : AppCompatActivity() {
 
             editAdminPageBinding.cancelButton.setOnClickListener {
                 dialog.setContentView(changeAdminBinding.root)
+                adminViewModel.getUsersByRole("2", data)
             }
         }
     }
@@ -248,7 +417,6 @@ class AdminActivity : AppCompatActivity() {
     private fun observerUserLiveData() {
         adminViewModel.observerUserListLiveData().observe(this, Observer {userList ->
             adminAdapter.setUserList(userList)
-            Log.d("zxc",userList.toString())
         })
     }
 
