@@ -5,16 +5,47 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.HistoryFragment">
-  <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/recyclerView"
+
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
       android:orientation="vertical"
+      android:padding="20dp"
       >
 
+    <ImageView
+        android:layout_gravity="center"
+        android:src="@drawable/ic_done"
+        android:layout_width="300dp"
+        android:layout_height="200dp">
+
+    </ImageView>
+
+
+    <TextView
+        android:text="Your tests results"
+        android:textColor="@color/royalBlue"
+        android:fontFamily="@font/montserrat_medium"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </TextView>
 
 
 
-  </androidx.recyclerview.widget.RecyclerView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        >
+    </androidx.recyclerview.widget.RecyclerView>
+
+  </LinearLayout>
 </FrameLayout>

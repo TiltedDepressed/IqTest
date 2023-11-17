@@ -35,7 +35,7 @@ class TestActivity : AppCompatActivity() {
         bindig = ActivityTestBinding.inflate(layoutInflater)
         setContentView(bindig.root)
 
-        sharePreference = this.getSharedPreferences("MY_PRE", Context.MODE_PRIVATE)
+        sharePreference = getSharedPreferences("MY_PRE", Context.MODE_PRIVATE)
         testViewModel = ViewModelProvider(this)[TestViewModel::class.java]
         adminViewModel = ViewModelProvider(this)[AdminViewModel::class.java]
         radioButtonAdapter = RadioButtonAnswerAdapter()
@@ -97,15 +97,15 @@ class TestActivity : AppCompatActivity() {
             bindig.questionText.text = questionList[counter].question
             bindig.counterText.text = (counter+1).toString() + "/" + "${questionList.size}"
         } else{
-
-
-
-
+               data.addProperty("user",sharePreference.getString("USER_ID",null))
+               data.addProperty("totalPoints",totalPoints)
+               testViewModel.createTestResult(data)
 
 
                 val intent =  Intent(this, TestEndActivity::class.java)
                 intent.putExtra("points",totalPoints)
                 startActivity(intent)
+                finish()
         }
         }
     }

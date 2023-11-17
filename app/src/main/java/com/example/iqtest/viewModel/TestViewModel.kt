@@ -9,6 +9,7 @@ import com.example.iqtest.interfaces.Api
 import com.example.iqtest.model.Answer
 import com.example.iqtest.model.ApiResponse
 import com.example.iqtest.model.Question
+import com.example.iqtest.model.Result
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -42,6 +43,20 @@ class TestViewModel(): ViewModel() {
 
             override fun onFailure(call: Call<ApiResponse<Question>>, t: Throwable) {
                Log.e("TestViewModel", t.message.toString())
+            }
+
+        })
+    }
+
+    fun createTestResult(data: JsonObject){
+        val api = ServiceBuilder.buildService(Api::class.java)
+        api.createTestResult(data).enqueue(object: Callback<Result>{
+            override fun onResponse(call: Call<Result>, response: Response<Result>) {
+
+            }
+
+            override fun onFailure(call: Call<Result>, t: Throwable) {
+                Log.e("TestViewModel", t.message.toString())
             }
 
         })

@@ -4,6 +4,7 @@ import com.example.iqtest.model.Answer
 import com.example.iqtest.model.ApiResponse
 import com.example.iqtest.model.Question
 import com.example.iqtest.model.User
+import com.example.iqtest.model.Result
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.http.Body
@@ -135,4 +136,17 @@ interface Api {
         @Path("count") count : String,
         @Body body: JsonObject
     ): Call<ApiResponse<Question>>
+
+    @Headers("Content-Type:application/json")
+    @POST("result/create")
+    fun createTestResult(
+        @Body body: JsonObject
+    ): Call<Result>
+
+    @Headers("Content-Type:application/json")
+    @POST("result/find/{userId}")
+    fun getResultByUserId(
+        @Path("userId") id : String,
+        @Body body : JsonObject
+    ): Call<ApiResponse<Result>>
 }
