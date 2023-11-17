@@ -1,5 +1,6 @@
 package com.example.iqtest.interfaces
 
+import com.example.iqtest.model.Answer
 import com.example.iqtest.model.ApiResponse
 import com.example.iqtest.model.Question
 import com.example.iqtest.model.User
@@ -86,5 +87,21 @@ interface Api {
         @Path("questionId") id : String,
         @Body body: JsonObject
     ): Call<Question>
+
+    //Answer
+    @Headers("Content-Type:application/json")
+    @POST("answer/find/{questionId}")
+    fun getAnswersByQuestionId(
+        @Path("questionId") id: String,
+        @Body body : JsonObject
+    ): Call<ApiResponse<Answer>>
+
+    @Headers("Content-Type:application/json")
+    @POST("answer/create")
+    fun createAnswerToQuestion(
+        @Body body : JsonObject
+    ): Call<Answer>
+
+
 
 }

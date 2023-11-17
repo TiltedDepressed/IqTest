@@ -16,15 +16,20 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.iqtest.R
 import com.example.iqtest.adapters.AdminAdapter
 import com.example.iqtest.adapters.AdminDeleteAdapter
+import com.example.iqtest.adapters.AnswerAdapter
+import com.example.iqtest.adapters.AnswersListAdapter
 import com.example.iqtest.adapters.QuestionAdapter
 import com.example.iqtest.adapters.QuestionDeleteAdapter
 import com.example.iqtest.databinding.ActivityAdminBinding
+import com.example.iqtest.databinding.AddAnswerPageBinding
 import com.example.iqtest.databinding.AdminDeleteRecyclerItemBinding
 import com.example.iqtest.databinding.ChangeAdminPageBinding
 import com.example.iqtest.databinding.ChangeQuestionPageBinding
 import com.example.iqtest.databinding.CreateAdminPageBinding
+import com.example.iqtest.databinding.CreateAnswerPageBinding
 import com.example.iqtest.databinding.CreateQuestionPageBinding
 import com.example.iqtest.databinding.DeleteAdminPageBinding
+import com.example.iqtest.databinding.DeleteAnswerPageBinding
 import com.example.iqtest.databinding.DeleteQuestionPageBinding
 import com.example.iqtest.databinding.EditAdminPageBinding
 import com.example.iqtest.databinding.EditQuestionPageBinding
@@ -51,6 +56,10 @@ class AdminActivity : AppCompatActivity() {
 
     private lateinit var questionAdapter: QuestionAdapter
 
+    private lateinit var answerAdapter: AnswerAdapter
+
+    private lateinit var answersListAdapter: AnswersListAdapter
+
     private lateinit var questionDeleteAdapter: QuestionDeleteAdapter
 
     private lateinit var adminDeleteAdapter: AdminDeleteAdapter
@@ -67,6 +76,10 @@ class AdminActivity : AppCompatActivity() {
         questionAdapter = QuestionAdapter()
 
         questionDeleteAdapter = QuestionDeleteAdapter()
+
+        answerAdapter = AnswerAdapter()
+
+        answersListAdapter = AnswersListAdapter()
 
         binding.createNewAdminButton.setOnClickListener {
             blurBackGround(true)
@@ -97,6 +110,123 @@ class AdminActivity : AppCompatActivity() {
             deleteQuestionShow()
         }
 
+        binding.createNewAnswerButton.setOnClickListener {
+            blurBackGround(true)
+            createAnswerShow()
+        }
+
+        binding.deleteAnswerBtn.setOnClickListener {
+            blurBackGround(true)
+            deleteAnswerShow()
+        }
+
+    }
+
+    private fun deleteAnswerShow() {
+        val deleteAnswerPageBinding = DeleteAnswerPageBinding.inflate(layoutInflater)
+    }
+
+    private fun createAnswerShow() {
+        val createAnswerPageBinding = CreateAnswerPageBinding.inflate(layoutInflater)
+        val dialog = Dialog(this)
+        dialog.setContentView(createAnswerPageBinding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+
+        val data = JsonObject()
+
+        data.addProperty("token",sharePreference.getString("TOKEN",null))
+
+        prepareAnswerCreateRecyclerView(createAnswerPageBinding)
+
+        adminViewModel.getAllQuestions(data)
+
+        observerAnswerCreateListLiveData()
+
+        onCreateAnswerButtonClick(dialog,createAnswerPageBinding,data)
+
+        createAnswerPageBinding.cancelButton.setOnClickListener {
+            blurBackGround(false)
+            dialog.dismiss()
+        }
+
+
+
+
+    }
+
+    private fun onCreateAnswerButtonClick(dialog: Dialog,createAnswerPageBinding: CreateAnswerPageBinding,data: JsonObject) {
+        answerAdapter.onItemClick = { question->
+
+            val addAnswerPageBinding = AddAnswerPageBinding.inflate(layoutInflater)
+            dialog.setContentView(addAnswerPageBinding.root)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+            dialog.setCancelable(false)
+            dialog.setCanceledOnTouchOutside(false)
+
+            adminViewModel.getQuestionById(question.questionId.toString(),data)
+
+            observerQuestionOnAnswerCreatePageListLiveData(addAnswerPageBinding)
+
+            adminViewModel.getAnswersByQuestionId(question.questionId.toString(),data)
+
+            prepareAnswerListRecyclerView(addAnswerPageBinding)
+
+            observerAnswerListLiveData()
+
+            addAnswerPageBinding.addAnswerButton.setOnClickListener {
+
+                val answer = addAnswerPageBinding.answerEt.text.toString()
+                val points = addAnswerPageBinding.pointsEt.text.toString()
+
+                if(answer.isNotEmpty() && points.isNotEmpty()){
+                data.addProperty("answer",answer)
+                data.addProperty("points",points)
+                data.addProperty("questionId",question.questionId)
+                adminViewModel.createAnswerToQuestion(data)
+                blurBackGround(false)
+                dialog.setContentView(createAnswerPageBinding.root)
+                }
+            }
+
+            addAnswerPageBinding.cancelButton.setOnClickListener {
+                dialog.setContentView(createAnswerPageBinding.root)
+            }
+
+        }
+    }
+
+    private fun observerAnswerListLiveData() {
+        adminViewModel.observeAnswerListLiveData().observe(this){answerList->
+            answersListAdapter.setAnswerList(answerList)
+        }
+    }
+
+    private fun prepareAnswerListRecyclerView(addAnswerPageBinding: AddAnswerPageBinding) {
+       addAnswerPageBinding.answersRecyclerView.apply {
+           adapter = answersListAdapter
+       }
+    }
+
+    private fun observerQuestionOnAnswerCreatePageListLiveData(addAnswerPageBinding: AddAnswerPageBinding) {
+        adminViewModel.observeQuestionLiveData().observe(this) { question ->
+            addAnswerPageBinding.questionText.text = question.question
+        }
+    }
+
+    private fun observerAnswerCreateListLiveData() {
+        adminViewModel.observerQuestionListLiveData().observe(this, Observer {questionList ->
+            answerAdapter.setQuestionList(questionList)
+        })
+    }
+
+    private fun prepareAnswerCreateRecyclerView(createAnswerPageBinding: CreateAnswerPageBinding) {
+        createAnswerPageBinding.questionListRecyclerView.apply {
+            adapter = answerAdapter
+        }
     }
 
     private fun deleteQuestionShow() {

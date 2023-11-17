@@ -14,7 +14,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:cardCornerRadius="10dp"
         android:layout_width="350dp"
-        android:layout_height="600dp"
+        android:layout_height="650dp"
         app:cardElevation="15dp"
         >
 
@@ -76,21 +76,27 @@
 
             </TextView>
 
-
-
-            <EditText
-                android:id="@+id/loginEt"
-                android:background="@drawable/edit_text_background"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="20dp"
-                android:fontFamily="@font/montserrat_semibold"
-                android:hint="User name"
-                android:padding="10dp"
-
+                android:layout_height="wrap_content"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 >
 
-            </EditText>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/loginEt"
+                    android:background="@drawable/edit_text_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:hint="Username"
+                    android:padding="10dp"
+
+                    >
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/wrongPasswordTextView"
@@ -106,20 +112,28 @@
 
             </TextView>
 
-            <EditText
-                android:id="@+id/passwordEt"
-                android:background="@drawable/edit_text_background"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="10dp"
-                android:hint="Password"
-                android:fontFamily="@font/montserrat_semibold"
-                android:padding="10dp"
-                android:inputType="textPassword"
+                android:layout_height="wrap_content"
+                app:endIconMode="password_toggle"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
                 >
 
+                <com.google.android.material.textfield.TextInputEditText
+                    android:background="@drawable/edit_text_background"
+                    android:id="@+id/passwordEt"
+                    android:layout_width="match_parent"
+                    android:hint="Password"
+                    android:layout_height="65dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/montserrat_semibold"
+                    android:padding="10dp"
+                    android:inputType="textPassword"
+                    >
+                </com.google.android.material.textfield.TextInputEditText>
 
-            </EditText>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -36,25 +36,25 @@ class AuthActivity : AppCompatActivity() {
 
         binding.signInButton.setOnClickListener {
 
-            if(binding.loginEt.text.isNotEmpty()){
+            if(binding.loginEt.text?.isNotEmpty() == true){
                 binding.loginEt.background = resources.getDrawable(R.drawable.edit_text_background)
                 binding.wrongDataTextView.visibility = View.GONE
 
             }
 
-            if(binding.passwordEt.text.isNotEmpty()){
+            if(binding.passwordEt.text?.isNotEmpty() == true){
                 binding.passwordEt.background = resources.getDrawable(R.drawable.edit_text_background)
                 binding.wrongPasswordTextView.visibility = View.GONE
 
             }
 
-            if(binding.loginEt.text.isEmpty()){
+            if(binding.loginEt.text?.isEmpty() == true){
                 binding.wrongDataTextView.text = "Login cannot be empty"
                 binding.wrongDataTextView.visibility = View.VISIBLE
                 binding.loginEt.background = resources.getDrawable(R.drawable.edit_text_background_red)
             }
 
-            if (binding.passwordEt.text.isEmpty()){
+            if (binding.passwordEt.text?.isEmpty() == true){
                 binding.wrongPasswordTextView.text = "Password cannot be empty"
                 binding.wrongPasswordTextView.visibility = View.VISIBLE
                 binding.passwordEt.background = resources.getDrawable(R.drawable.edit_text_background_red)

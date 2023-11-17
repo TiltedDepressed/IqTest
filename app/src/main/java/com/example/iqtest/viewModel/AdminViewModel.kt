@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.iqtest.datasource.ServiceBuilder
 import com.example.iqtest.interfaces.Api
+import com.example.iqtest.model.Answer
 import com.example.iqtest.model.ApiResponse
 import com.example.iqtest.model.Question
 import com.example.iqtest.model.User
@@ -23,6 +24,8 @@ class AdminViewModel: ViewModel() {
     private var userLiveData = MutableLiveData<User>()
 
     private var questionLiveData = MutableLiveData<Question>()
+
+    private var answerListLiveData = MutableLiveData<List<Answer>>()
     fun getUsersByRole(role: String,data:JsonObject){
         val api = ServiceBuilder.buildService(Api::class.java)
         api.getAllUsersByRole(role,data).enqueue(object: Callback<ApiResponse<User>>{
@@ -174,8 +177,47 @@ class AdminViewModel: ViewModel() {
         })
     }
 
+    fun getAnswersByQuestionId(id: String,data: JsonObject){
+        val api = ServiceBuilder.buildService(Api::class.java)
+        api.getAnswersByQuestionId(id,data).enqueue(object : Callback<ApiResponse<Answer>>{
+            override fun onResponse(
+                call: Call<ApiResponse<Answer>>,
+                response: Response<ApiResponse<Answer>>
+            ) {
+                if (response.isSuccessful) {
+                    response.body()?.let { answerList ->
+                        answerListLiveData.postValue(answerList.result)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ApiResponse<Answer>>, t: Throwable) {
+                Log.e("AdminViewModel", t.message.toString())
+            }
+
+        })
+    }
+
+    fun createAnswerToQuestion(data: JsonObject){
+        val api = ServiceBuilder.buildService(Api::class.java)
+        api.createAnswerToQuestion(data).enqueue(object : Callback<Answer>{
+            override fun onResponse(call: Call<Answer>, response: Response<Answer>) {
+
+            }
+
+            override fun onFailure(call: Call<Answer>, t: Throwable) {
+                Log.e("AdminViewModel", t.message.toString())
+            }
+
+        })
+    }
 
 
+
+
+    fun observeAnswerListLiveData(): LiveData<List<Answer>>{
+        return answerListLiveData
+    }
     fun observeUserLiveData(): LiveData<User>{
         return userLiveData
     }
