@@ -36,12 +36,11 @@ class RadioButtonAnswerAdapter: RecyclerView.Adapter<RadioButtonAnswerAdapter.Vi
 
         holder.binding.radioButton.text = answerList[position].answer
 
-        if(position == lastCheckedPosition){
-            holder.binding.radioButton.isChecked = true
-        } else{
-            holder.binding.radioButton.isChecked = false
-        }
+        holder.binding.radioGroup.setOnCheckedChangeListener(null)
 
+        holder.binding.radioGroup.clearCheck()
+
+        holder.binding.radioButton.isChecked = position == lastCheckedPosition
 
         holder.binding.radioButton.setOnClickListener {
             lastCheckedPosition = holder.adapterPosition
