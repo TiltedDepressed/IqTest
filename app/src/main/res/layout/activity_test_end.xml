@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.TestEndActivity">
+
+<LinearLayout
+    android:id="@+id/contentLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/edit_text_background"
+        android:padding="20dp"
+        >
+
+        <ImageView
+            android:src="@drawable/ic_done"
+            android:layout_gravity="center"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginBottom="10dp"
+            >
+
+        </ImageView>
+
+
+        <ImageView
+            android:src="@drawable/ic_end_test"
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="200dp">
+
+        </ImageView>
+
+
+
+    <TextView
+        android:text="Good job"
+        android:textSize="40sp"
+        android:textColor="@color/royalBlue"
+        android:textAlignment="center"
+        android:fontFamily="@font/montserrat_semibold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+    </TextView>
+
+    <TextView
+        android:text="You completely \n done test !!!"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:fontFamily="@font/montserrat_medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        >
+
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:text="Total points — "
+            android:textSize="32sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:fontFamily="@font/montserrat_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
+
+
+        <TextView
+            android:id="@+id/totalPointsTextView"
+            tools:text="404"
+            android:textSize="32sp"
+            android:textColor="@color/royalBlue"
+            android:textAlignment="center"
+            android:fontFamily="@font/montserrat_semibold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
+
+    </LinearLayout>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_marginTop="20dp"
+        android:id="@+id/cancelButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_behavior_red"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/montserrat_semibold"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:textColor="@drawable/button_text_behavior_red"
+        android:textSize="16sp">
+    </androidx.appcompat.widget.AppCompatButton>
+    </LinearLayout>
+</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -47,6 +47,8 @@ class TestViewModel(): ViewModel() {
         })
     }
 
+
+
     fun observeAnswerLiveData(): LiveData<Answer>{
         return answerLiveData
     }

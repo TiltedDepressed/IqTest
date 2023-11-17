@@ -15,6 +15,7 @@
         >
 
 
+
         <TextView
             android:id="@+id/counterText"
             tools:text="0/10"
@@ -47,7 +48,7 @@
             android:layout_marginTop="20dp"
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="250dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
             >
@@ -71,6 +72,22 @@
             android:focusable="true"
             >
 
+        </androidx.appcompat.widget.AppCompatButton>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginTop="20dp"
+            android:id="@+id/stepBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_behavior_red"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="Back"
+            android:textAllCaps="false"
+            android:textColor="@drawable/button_text_behavior_red"
+            android:textSize="16sp">
         </androidx.appcompat.widget.AppCompatButton>
 
         <androidx.appcompat.widget.AppCompatButton

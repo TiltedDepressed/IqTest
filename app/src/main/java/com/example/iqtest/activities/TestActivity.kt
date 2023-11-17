@@ -47,7 +47,44 @@ class TestActivity : AppCompatActivity() {
 
         testViewModel.generateTest(count,data)
 
+        observeQuestionLiveData(counter)
+
+        onAnswerRadioButtonClick()
+
+        bindig.nextButton.setOnClickListener {
+            counter++
+            observeQuestionLiveData(counter)
+        }
+
+        bindig.stepBack.setOnClickListener {
+        if(counter != 0){
+            counter--
+            observeQuestionLiveData(counter)
+          }
+
+        }
+
+
+
+        bindig.cancelButton.setOnClickListener {
+            val intent = Intent(this,MainActivity::class.java)
+            startActivity(intent)
+        }
+
+    }
+
+    private fun observeQuestionLiveData(counter:Int) {
+
+        val token = sharePreference.getString("TOKEN",null)
+        val data = JsonObject()
+        data.addProperty("token",token)
+
+
+
         testViewModel.observerQuestionListLiveData().observe(this){questionList->
+            if(counter < questionList.size){
+
+
 
             bindig.questionText.text = questionList[counter].question
             bindig.counterText.text = (counter+1).toString() + "/" + "${questionList.size}"
@@ -57,22 +94,20 @@ class TestActivity : AppCompatActivity() {
             adminViewModel.observeAnswerListLiveData().observe(this){answerList ->
                 radioButtonAdapter.setAnswerList(answerList)
             }
-            bindig.nextButton.setOnClickListener {
-                counter++
-                adminViewModel.getAnswersByQuestionId(questionList[counter].questionId.toString(),data)
-            //    adminViewModel.observeAnswerListLiveData().observe(this){answerList ->
-            //    }
-                bindig.questionText.text = questionList[counter].question
-                bindig.counterText.text = (counter+1).toString() + "/" + "${questionList.size}"
-            }
-        }
-        onAnswerRadioButtonClick()
+            bindig.questionText.text = questionList[counter].question
+            bindig.counterText.text = (counter+1).toString() + "/" + "${questionList.size}"
+        } else{
 
-        bindig.cancelButton.setOnClickListener {
-            val intent = Intent(this,MainActivity::class.java)
-            startActivity(intent)
-        }
 
+
+
+
+
+                val intent =  Intent(this, TestEndActivity::class.java)
+                intent.putExtra("points",totalPoints)
+                startActivity(intent)
+        }
+        }
     }
 
     private fun onAnswerRadioButtonClick(): Int {
