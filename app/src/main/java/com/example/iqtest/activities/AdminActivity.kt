@@ -17,6 +17,8 @@ import com.example.iqtest.R
 import com.example.iqtest.adapters.AdminAdapter
 import com.example.iqtest.adapters.AdminDeleteAdapter
 import com.example.iqtest.adapters.AnswerAdapter
+import com.example.iqtest.adapters.AnswerChangeAdapter
+import com.example.iqtest.adapters.AnswerDeleteAdapter
 import com.example.iqtest.adapters.AnswersListAdapter
 import com.example.iqtest.adapters.QuestionAdapter
 import com.example.iqtest.adapters.QuestionDeleteAdapter
@@ -24,6 +26,7 @@ import com.example.iqtest.databinding.ActivityAdminBinding
 import com.example.iqtest.databinding.AddAnswerPageBinding
 import com.example.iqtest.databinding.AdminDeleteRecyclerItemBinding
 import com.example.iqtest.databinding.ChangeAdminPageBinding
+import com.example.iqtest.databinding.ChangeAnswerPageBinding
 import com.example.iqtest.databinding.ChangeQuestionPageBinding
 import com.example.iqtest.databinding.CreateAdminPageBinding
 import com.example.iqtest.databinding.CreateAnswerPageBinding
@@ -63,6 +66,10 @@ class AdminActivity : AppCompatActivity() {
     private lateinit var questionDeleteAdapter: QuestionDeleteAdapter
 
     private lateinit var adminDeleteAdapter: AdminDeleteAdapter
+
+    private lateinit var answerDeleteAdapter: AnswerDeleteAdapter
+
+    private lateinit var answerChangeAdapter: AnswerChangeAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -80,6 +87,10 @@ class AdminActivity : AppCompatActivity() {
         answerAdapter = AnswerAdapter()
 
         answersListAdapter = AnswersListAdapter()
+
+        answerDeleteAdapter = AnswerDeleteAdapter()
+
+        answerChangeAdapter = AnswerChangeAdapter()
 
         binding.createNewAdminButton.setOnClickListener {
             blurBackGround(true)
@@ -115,6 +126,11 @@ class AdminActivity : AppCompatActivity() {
             createAnswerShow()
         }
 
+        binding.changeAnswerButton.setOnClickListener {
+            blurBackGround(true)
+            changeAnswerShow()
+        }
+
         binding.deleteAnswerBtn.setOnClickListener {
             blurBackGround(true)
             deleteAnswerShow()
@@ -122,8 +138,99 @@ class AdminActivity : AppCompatActivity() {
 
     }
 
+    private fun changeAnswerShow() {
+        val changeAnswerPageBinding = ChangeAnswerPageBinding.inflate(layoutInflater)
+        val dialog = Dialog(this)
+        dialog.setContentView(changeAnswerPageBinding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+
+        val data = JsonObject()
+
+        data.addProperty("token",sharePreference.getString("TOKEN",null))
+
+        adminViewModel.getAllAnswers(data)
+
+        prepareAnswerChangeRecyclerView(changeAnswerPageBinding)
+
+        observerAnswerChangeList()
+
+        onAnswerChangeButtonClick()
+
+        changeAnswerPageBinding.cancelButton.setOnClickListener {
+            blurBackGround(false)
+            dialog.dismiss()
+        }
+    }
+
+    private fun onAnswerChangeButtonClick() {
+        answerChangeAdapter.onItemClick = {answer ->
+
+        }
+    }
+
+    private fun observerAnswerChangeList() {
+        adminViewModel.observeAnswerListLiveData().observe(this){answerList ->
+            answerChangeAdapter.setAnswerList(answerList)
+        }
+    }
+
+    private fun prepareAnswerChangeRecyclerView(changeAnswerPageBinding: ChangeAnswerPageBinding) {
+        changeAnswerPageBinding.answerListRecyclerView.apply {
+            adapter = answerChangeAdapter
+        }
+    }
+
     private fun deleteAnswerShow() {
         val deleteAnswerPageBinding = DeleteAnswerPageBinding.inflate(layoutInflater)
+        val dialog = Dialog(this)
+        dialog.setContentView(deleteAnswerPageBinding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+
+        val data = JsonObject()
+
+        data.addProperty("token",sharePreference.getString("TOKEN",null))
+
+        adminViewModel.getAllAnswers(data)
+
+        prepareAnswerDeleteRecyclerView(deleteAnswerPageBinding)
+
+        observerAnswerDeleteList()
+
+        deleteAnswerPageBinding.cancelButton.setOnClickListener {
+            blurBackGround(false)
+            dialog.dismiss()
+        }
+
+        onAnswerDeleteButtonClick()
+
+
+    }
+
+    private fun onAnswerDeleteButtonClick() {
+        val data = JsonObject()
+        data.addProperty("token",sharePreference.getString("TOKEN",null))
+        answerDeleteAdapter.onItemClick = {answer ->
+           adminViewModel.deleteAnswerById(answer.answerId.toString(),data)
+            adminViewModel.getAllAnswers(data)
+        }
+    }
+
+    private fun observerAnswerDeleteList() {
+        adminViewModel.observeAnswerListLiveData().observe(this){answerList->
+            answerDeleteAdapter.setAnswerList(answerList)
+        }
+    }
+
+    private fun prepareAnswerDeleteRecyclerView(deleteAnswerPageBinding: DeleteAnswerPageBinding) {
+       deleteAnswerPageBinding.answerListRecyclerView.apply {
+           adapter = answerDeleteAdapter
+       }
     }
 
     private fun createAnswerShow() {
@@ -145,7 +252,7 @@ class AdminActivity : AppCompatActivity() {
 
         observerAnswerCreateListLiveData()
 
-        onCreateAnswerButtonClick(dialog,createAnswerPageBinding,data)
+        onCreateAnswerButtonClick(dialog,createAnswerPageBinding)
 
         createAnswerPageBinding.cancelButton.setOnClickListener {
             blurBackGround(false)
@@ -157,8 +264,12 @@ class AdminActivity : AppCompatActivity() {
 
     }
 
-    private fun onCreateAnswerButtonClick(dialog: Dialog,createAnswerPageBinding: CreateAnswerPageBinding,data: JsonObject) {
+    private fun onCreateAnswerButtonClick(dialog: Dialog,createAnswerPageBinding: CreateAnswerPageBinding,) {
         answerAdapter.onItemClick = { question->
+
+            val data = JsonObject()
+
+            data.addProperty("token",sharePreference.getString("TOKEN",null))
 
             val addAnswerPageBinding = AddAnswerPageBinding.inflate(layoutInflater)
             dialog.setContentView(addAnswerPageBinding.root)

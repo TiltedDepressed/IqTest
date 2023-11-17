@@ -102,6 +102,19 @@ interface Api {
         @Body body : JsonObject
     ): Call<Answer>
 
+    @Headers("Content-Type:application/json")
+    @POST("answer")
+    fun getAllAnswers(
+        @Body body: JsonObject
+    ): Call<ApiResponse<Answer>>
+
+    @Headers("Content-Type:application/json")
+    @POST("answer/delete/{answerId}")
+    fun deleteAnswerById(
+        @Path("answerId") id : String,
+        @Body body: JsonObject
+    ): Call<Answer>
+
 
 
 }

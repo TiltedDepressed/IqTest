@@ -212,6 +212,41 @@ class AdminViewModel: ViewModel() {
         })
     }
 
+    fun getAllAnswers(data: JsonObject){
+        val api = ServiceBuilder.buildService(Api::class.java)
+        api.getAllAnswers(data).enqueue(object: Callback<ApiResponse<Answer>>{
+            override fun onResponse(
+                call: Call<ApiResponse<Answer>>,
+                response: Response<ApiResponse<Answer>>
+            ) {
+                if (response.isSuccessful) {
+                    response.body()?.let { answerList ->
+                        answerListLiveData.postValue(answerList.result)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ApiResponse<Answer>>, t: Throwable) {
+                Log.e("AdminViewModel", t.message.toString())
+            }
+
+        })
+    }
+
+    fun deleteAnswerById(id: String,data: JsonObject){
+        val api = ServiceBuilder.buildService(Api::class.java)
+        api.deleteAnswerById(id,data).enqueue(object: Callback<Answer>{
+            override fun onResponse(call: Call<Answer>, response: Response<Answer>) {
+
+            }
+
+            override fun onFailure(call: Call<Answer>, t: Throwable) {
+                Log.e("AdminViewModel", t.message.toString())
+            }
+
+        })
+    }
+
 
 
 
