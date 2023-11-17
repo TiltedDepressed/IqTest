@@ -6,4 +6,92 @@
     android:layout_height="match_parent"
     tools:context=".activities.TestActivity">
 
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp"
+        >
+
+
+        <TextView
+            android:id="@+id/counterText"
+            tools:text="0/10"
+            android:textAlignment="center"
+            android:textSize="40sp"
+            android:textColor="@color/royalBlue"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/montserrat_semibold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </TextView>
+
+
+        <TextView
+            android:id="@+id/questionText"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            tools:text="Question text"
+            android:textAlignment="center"
+            android:textSize="32sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/montserrat_semibold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </TextView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="20dp"
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            >
+
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginTop="20dp"
+            android:id="@+id/nextButton"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="Next question"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_behavior"
+            android:textColor="@drawable/button_text_behavior"
+            android:clickable="true"
+            android:focusable="true"
+            >
+
+        </androidx.appcompat.widget.AppCompatButton>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginTop="20dp"
+            android:id="@+id/cancelButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_behavior_red"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/montserrat_semibold"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="@drawable/button_text_behavior_red"
+            android:textSize="16sp">
+        </androidx.appcompat.widget.AppCompatButton>
+
+
+    </LinearLayout>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

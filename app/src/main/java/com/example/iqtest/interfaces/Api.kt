@@ -115,6 +115,24 @@ interface Api {
         @Body body: JsonObject
     ): Call<Answer>
 
+    @Headers("Content-Type:application/json")
+    @POST("answer/{answerId}")
+    fun getAnswerById(
+        @Path("answerId") id : String,
+        @Body body: JsonObject
+    ): Call<Answer>
 
+    @Headers("Content-Type:application/json")
+    @POST("answer/update/{answerId}")
+    fun updateAnswerById(
+        @Path("answerId") id: String,
+        @Body body: JsonObject
+    ): Call<Answer>
 
+    @Headers("Content-Type:application/json")
+    @POST("question/questions/random/{count}")
+    fun generateTest(
+        @Path("count") count : String,
+        @Body body: JsonObject
+    ): Call<ApiResponse<Question>>
 }

@@ -35,6 +35,7 @@ import com.example.iqtest.databinding.DeleteAdminPageBinding
 import com.example.iqtest.databinding.DeleteAnswerPageBinding
 import com.example.iqtest.databinding.DeleteQuestionPageBinding
 import com.example.iqtest.databinding.EditAdminPageBinding
+import com.example.iqtest.databinding.EditAnswerPageBinding
 import com.example.iqtest.databinding.EditQuestionPageBinding
 import com.example.iqtest.datasource.ServiceBuilder
 import com.example.iqtest.interfaces.Api
@@ -157,7 +158,7 @@ class AdminActivity : AppCompatActivity() {
 
         observerAnswerChangeList()
 
-        onAnswerChangeButtonClick()
+        onAnswerChangeButtonClick(changeAnswerPageBinding,dialog)
 
         changeAnswerPageBinding.cancelButton.setOnClickListener {
             blurBackGround(false)
@@ -165,9 +166,51 @@ class AdminActivity : AppCompatActivity() {
         }
     }
 
-    private fun onAnswerChangeButtonClick() {
+    private fun onAnswerChangeButtonClick(changeAnswerPageBinding: ChangeAnswerPageBinding,dialog: Dialog) {
+        val data = JsonObject()
+        data.addProperty("token",sharePreference.getString("TOKEN",null))
         answerChangeAdapter.onItemClick = {answer ->
+            val editAnswerPageBinding = EditAnswerPageBinding.inflate(layoutInflater)
+            dialog.setContentView(editAnswerPageBinding.root)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+            dialog.setCancelable(false)
+            dialog.setCanceledOnTouchOutside(false)
 
+            adminViewModel.getAnswerById(answer.answerId.toString(),data)
+
+            observerAnswerLiveData(editAnswerPageBinding)
+
+
+            editAnswerPageBinding.changeAnswerButton.setOnClickListener {
+                if(editAnswerPageBinding.answerEt.text.isNotEmpty()){
+                    data.addProperty("answer",editAnswerPageBinding.answerEt.text.toString())
+                    adminViewModel.updateAnswerById(answer.answerId.toString(),data)
+                    editAnswerPageBinding.answerEt.text.clear()
+                    adminViewModel.getAnswerById(answer.answerId.toString(),data)
+                }
+                if(editAnswerPageBinding.pointsEt.text.isNotEmpty()){
+                    data.addProperty("points",editAnswerPageBinding.pointsEt.text.toString())
+                    adminViewModel.updateAnswerById(answer.answerId.toString(),data)
+                    editAnswerPageBinding.pointsEt.text.clear()
+                    adminViewModel.getAnswerById(answer.answerId.toString(),data)
+
+                }
+
+
+            }
+            editAnswerPageBinding.cancelButton.setOnClickListener {
+                dialog.setContentView(changeAnswerPageBinding.root)
+                adminViewModel.getAllAnswers(data)
+            }
+
+        }
+    }
+
+    private fun observerAnswerLiveData(editAnswerPageBinding: EditAnswerPageBinding) {
+        adminViewModel.observeAnswerLiveData().observe(this){answer->
+            editAnswerPageBinding.answerEt.hint = answer.answer
+            editAnswerPageBinding.pointsEt.hint = answer.points
         }
     }
 

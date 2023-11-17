@@ -25,6 +25,8 @@ class AdminViewModel: ViewModel() {
 
     private var questionLiveData = MutableLiveData<Question>()
 
+    private var answerLiveData = MutableLiveData<Answer>()
+
     private var answerListLiveData = MutableLiveData<List<Answer>>()
     fun getUsersByRole(role: String,data:JsonObject){
         val api = ServiceBuilder.buildService(Api::class.java)
@@ -247,9 +249,46 @@ class AdminViewModel: ViewModel() {
         })
     }
 
+    fun getAnswerById(id: String, data: JsonObject){
+        val api = ServiceBuilder.buildService(Api::class.java)
+        api.getAnswerById(id,data).enqueue(object :Callback<Answer>{
+            override fun onResponse(call: Call<Answer>, response: Response<Answer>) {
+                if (response.isSuccessful) {
+                    response.body()?.let { answer ->
+                        answerLiveData.postValue(answer)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Answer>, t: Throwable) {
+                Log.e("AdminViewModel", t.message.toString())
+            }
+
+        })
+    }
+
+    fun updateAnswerById(id: String, data:JsonObject){
+        val api = ServiceBuilder.buildService(Api::class.java)
+        api.updateAnswerById(id,data).enqueue(object: Callback<Answer>{
+            override fun onResponse(call: Call<Answer>, response: Response<Answer>) {
+                if(response.isSuccessful){
+                    observeAnswerLiveData()
+                }
+            }
+
+            override fun onFailure(call: Call<Answer>, t: Throwable) {
+                Log.e("AdminViewModel", t.message.toString())
+            }
+
+        })
+    }
 
 
 
+
+    fun observeAnswerLiveData(): LiveData<Answer>{
+        return answerLiveData
+    }
     fun observeAnswerListLiveData(): LiveData<List<Answer>>{
         return answerListLiveData
     }

@@ -1,8 +1,11 @@
 package com.example.iqtest.fragments
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,8 +17,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.iqtest.activities.AboutActivity
 import com.example.iqtest.activities.TestActivity
 import com.example.iqtest.databinding.FragmentHomeBinding
+import com.example.iqtest.databinding.TestLengthDialogBinding
 import com.example.iqtest.viewModel.AccountViewModel
 import com.google.gson.JsonObject
+import jp.wasabeef.blurry.Blurry
 
 class HomeFragment : Fragment() {
 
@@ -52,10 +57,42 @@ class HomeFragment : Fragment() {
         }
 
         binding.startTestButton.setOnClickListener {
-            val intent = Intent(this.requireActivity(), TestActivity::class.java)
+
+            blurBackGround(true)
+            showChoiceTestLengthDialog()
+        }
+
+    }
+
+    private fun showChoiceTestLengthDialog() {
+        val testLengthDialogBinding = TestLengthDialogBinding.inflate(layoutInflater)
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(testLengthDialogBinding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+
+        testLengthDialogBinding.shortTestButton.setOnClickListener {
+            val intent = Intent(requireActivity(), TestActivity::class.java)
+            intent.putExtra("count","5")
+            startActivity(intent)
+        }
+        testLengthDialogBinding.mediumTestButton.setOnClickListener {
+            val intent = Intent(requireActivity(), TestActivity::class.java)
+            intent.putExtra("count","10")
+            startActivity(intent)
+        }
+        testLengthDialogBinding.longTestButton.setOnClickListener {
+            val intent = Intent(requireActivity(), TestActivity::class.java)
+            intent.putExtra("count","15")
             startActivity(intent)
         }
 
+        testLengthDialogBinding.cancelButton.setOnClickListener {
+            blurBackGround(false)
+            dialog.dismiss()
+        }
     }
 
     private fun observeUserLiveData() {
@@ -70,6 +107,14 @@ class HomeFragment : Fragment() {
             binding.userNameTextView.text = user.login
         }
 
+    }
+
+    private fun blurBackGround(toggle: Boolean) {
+        if (toggle) {
+            Blurry.with(requireContext()).radius(20).sampling(50).onto(binding.cardView)
+        } else {
+            Blurry.delete(binding.cardView)
+        }
     }
 
 }
